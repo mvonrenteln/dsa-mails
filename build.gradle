@@ -1,0 +1,21 @@
+group 'com.github.mvonrenteln'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'groovy'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://maven.openkm.com/maven2/"
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+    compile 'com.auxilii:msgparser:1.12'
+    compile 'org.apache.poi:poi:3.9'
+    compile 'org.apache.poi:poi-scratchpad:3.9'
+    compile 'org.apache.commons:commons-csv:1.3'
+}
