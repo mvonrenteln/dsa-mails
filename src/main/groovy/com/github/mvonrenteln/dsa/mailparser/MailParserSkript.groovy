@@ -29,8 +29,11 @@ package com.github.mvonrenteln.dsa.mailparser
 
 import com.auxilii.msgparser.Message
 import com.auxilii.msgparser.MsgParser
+import groovy.json.JsonOutput
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
+
+import java.nio.file.Paths
 
 MsgParser msgParser = new MsgParser();
 
@@ -55,12 +58,12 @@ new File(mailVerzeichnis).eachFile() { file ->
 
 }
 
-def format = CSVFormat.DEFAULT.withHeader("Datum", "Mail-Titel", "Kampagne", "Abenteuer", "Text")
-def csvFilePrinter = new CSVPrinter(new FileWriter(mailVerzeichnis + "/DSA-Mails.csv"), format);
 mails.each { Mail mail ->
-    String datum = mail.datum.format("dd.MM.yyyy hh:mm")
-    println mail.kampagne.padRight(30) + " - " + mail.abenteuer.padRight(50) + datum
-    csvFilePrinter.printRecord([datum, mail.subject, mail.kampagne, mail.abenteuer, mail.text])
+    println mail.kampagne.padRight(30) + " - " + mail.abenteuer.padRight(50) + mail.datum.format("dd.MM.yyyy hh:mm")
+}
+
+Paths.get(mailVerzeichnis, "DSA-Abenteuer.json").withWriter { jsonWriter ->
+    jsonWriter.write JsonOutput.prettyPrint(JsonOutput.toJson(mails))
 }
 
 String getKampagne(String subject) {
