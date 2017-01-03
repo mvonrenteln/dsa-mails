@@ -37,7 +37,7 @@ import java.nio.file.Paths
 
 MsgParser msgParser = new MsgParser();
 
-def mails = new TreeSet<Mail>({ Mail o1, Mail o2 -> o1.datum.compareTo(o2.datum) })
+def mails = new TreeSet({ o1, o2 -> o1.datum.compareTo(o2.datum) })
 
 def mailVerzeichnis = args[0]
 println "Lese MSG-Dateien in ${ mailVerzeichnis}"
@@ -45,11 +45,11 @@ new File(mailVerzeichnis).eachFile() { file ->
     try {
         if(file.name.endsWith('.msg')) {
             Message msg = msgParser.parseMsg(file.absolutePath);
-            mails << (new Mail(subject:msg.subject,
+            mails << ([subject:msg.subject,
                        datum:msg.date,
                        kampagne:getKampagne(msg.subject),
                        abenteuer:getAbenteuer(msg.subject),
-                       text:msg.bodyText))
+                       text:msg.bodyText])
         }
     } catch (Exception e) {
         println "$file.name fehlerhaft!"
@@ -58,7 +58,7 @@ new File(mailVerzeichnis).eachFile() { file ->
 
 }
 
-mails.each { Mail mail ->
+mails.each { mail ->
     println mail.kampagne.padRight(30) + " - " + mail.abenteuer.padRight(50) + mail.datum.format("dd.MM.yyyy hh:mm")
 }
 
@@ -93,9 +93,4 @@ private int getTrennerPos(String subject) {
 String entfernePrefix(String subject) {
     def mailingListenPrefixe = ~/\[.+?\]/
     return subject.replaceAll(mailingListenPrefixe, "").trim()
-}
-
-class Mail {
-    String subject, kampagne, abenteuer, text
-    Date datum
 }
