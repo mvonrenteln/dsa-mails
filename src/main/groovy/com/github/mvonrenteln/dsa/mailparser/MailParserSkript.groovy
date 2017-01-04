@@ -53,7 +53,7 @@ new File(mailVerzeichnis).eachFile() { file ->
         }
     } catch (Exception e) {
         println "$file.name fehlerhaft!"
-        println e
+        e.printStackTrace()
     }
 
 }
