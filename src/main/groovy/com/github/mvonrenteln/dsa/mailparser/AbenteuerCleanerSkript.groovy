@@ -42,15 +42,19 @@ def jsonSlurper = new JsonSlurper()
 def abenteuerListe = jsonSlurper.parse(new File(input))
 
 abenteuerListe.each { abenteuer ->
-    int textEnde = abenteuer.text.indexOf("AP")
+    abenteuer.abenteuer = abenteuer.abenteuer.trim()
+    if (abenteuer.kampagne) {
+        abenteuer.kampagne = abenteuer.kampagne.trim()
+    }
+    abenteuer.text = entferneUnerwünschtenText(entferneMehrfacheUmbrüche(abenteuer.text)).trim()
 
-    abenteuer.text = entferneUnerwünschtenText(entferneMehrfacheUmbrüche(abenteuer.text))
+    int textEnde = abenteuer.text.indexOf("AP")
     if (textEnde != -1) {
         abenteuer.daten = abenteuer.text[textEnde.. -1].trim()
         abenteuer.text = abenteuer.text[0.. textEnde-1].trim()
-
     }
 
+    println abenteuer.abenteuer
     println abenteuer.text
     println "*" * 200
 }
